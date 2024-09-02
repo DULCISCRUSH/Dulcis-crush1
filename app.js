@@ -1,9 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
 const grid = document.querySelector('.grid')
 const scoreDisplay = document.getElementById('score')
+const triviaImage = document.getElementById('triviaImage')//TRIVIA
 const width = 8
 const squares = []
 let score = 0
+
+const triviaImages = [ // TRIVIA
+        'url(assets/image1.jpeg)',
+        'url(assets/image2.jpeg)',
+        'url(assets/image3.jpeg)',
+    ]
+	
+	//TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, 
+function updateTriviaImage() {
+        let randomIndex = Math.floor(Math.random() * triviaImages.length)
+        triviaImage.src = triviaImages[randomIndex]
+    }
+
+function incrementScore(points) {
+        score += points
+        scoreDisplay.innerHTML = score
+
+        if (score >= 400 && score % 400 === 0) {
+            updateTriviaImage()
+        }
+    }
+	//TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, TRIVIA, 
 
 const candyColors = [
     'url(images/red-candy.png)',
@@ -11,7 +34,8 @@ const candyColors = [
     'url(images/orange-candy.png)',
     'url(images/purple-candy.png)',
     'url(images/green-candy.png)',
-    'url(images/blue-candy.png)'
+    'url(images/blue-candy.png)',
+	'url(images/blue-candy.png)'
   ]
 
 //create your board
@@ -20,6 +44,15 @@ function createBoard() {
     const square = document.createElement('div')
     square.setAttribute('draggable', true)
     square.setAttribute('id', i)
+	
+	// Adiciona um evento para prevenir comportamento padrão ao arrastar
+        square.addEventListener('dragstart', dragStart)
+        square.addEventListener('dragend', dragEnd)
+        square.addEventListener('dragover', dragOver)
+        square.addEventListener('dragenter', dragEnter)
+        square.addEventListener('dragleave', dragLeave)
+        square.addEventListener('drop', dragDrop)
+	
     let randomColor = Math.floor(Math.random() * candyColors.length)
     square.style.backgroundImage = candyColors[randomColor]
     grid.appendChild(square)
@@ -108,6 +141,7 @@ function moveIntoSquareBelow() {
       if (notValid.includes(i)) continue
 
       if(rowOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+		incrementScore(4)//TRIVIA
         score += 4
         scoreDisplay.innerHTML = score
         rowOfFour.forEach(index => {
@@ -126,6 +160,7 @@ function moveIntoSquareBelow() {
       const isBlank = squares[i].style.backgroundImage === ''
 
       if(columnOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+		incrementScore(4)//TRIVIA
         score += 4
         scoreDisplay.innerHTML = score
         columnOfFour.forEach(index => {
@@ -147,6 +182,7 @@ checkColumnForFour()
       if (notValid.includes(i)) continue
 
       if(rowOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+		incrementScore(3)//TRIVIA
         score += 3
         scoreDisplay.innerHTML = score
         rowOfThree.forEach(index => {
@@ -165,6 +201,7 @@ checkColumnForFour()
       const isBlank = squares[i].style.backgroundImage === ''
 
       if(columnOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+		incrementScore(3)//TRIVIA
         score += 3
         scoreDisplay.innerHTML = score
         columnOfThree.forEach(index => {
